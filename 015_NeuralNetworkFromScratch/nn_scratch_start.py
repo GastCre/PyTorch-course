@@ -27,7 +27,20 @@ X_train_scale = scaler.fit_transform(X_train)
 X_test_scale = scaler.transform(X_test)
 
 #%% network class
-    
+class NeuralNetwork:
+    def __init__(self, LR, X_train, y_train,X_test, y_test):
+        self.w=np.random.randn(X_train.shape[1])
+        self.b=np.random.randn()
+        self.LR=LR
+        self.X_train=X_train
+        self.y_train=y_train
+        self.X_test=X_test
+        self.y_test=y_test
+        self.L_train=[]
+        self.L_test=[]
+
+    def activation(self,x):
+            
 #%% Hyper parameters
 
 #%% model instance and training
