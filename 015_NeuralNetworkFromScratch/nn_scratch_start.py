@@ -40,7 +40,16 @@ class NeuralNetwork:
         self.L_test=[]
 
     def activation(self,x):
-            
+        return 1/(1+np.exp(-x)) #Sigmoid function
+    
+    def der_activation(self,x):
+        return self.activation(x)*(1-self.activation(x))
+    def forward(self,X):
+        hidden_1=np.dot(X,self.w)+self.b
+        activate_1=self.activation(hidden_1)
+        return activate_1
+    
+
 #%% Hyper parameters
 
 #%% model instance and training
