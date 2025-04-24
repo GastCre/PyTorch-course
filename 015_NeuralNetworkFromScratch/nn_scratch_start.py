@@ -118,5 +118,5 @@ correct/total
 from collections import Counter
 Counter(y_test)
 # %% Confusion Matrix
-conf_matrix=confusion_matrix(y_true=y_test, y_pred=y_preds)
+confusion_matrix(y_true=y_test, y_pred=y_preds)
 # %%
