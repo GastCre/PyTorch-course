@@ -93,7 +93,7 @@ class NeuralNetwork:
         
 #%% Hyper parameters
 LR = 0.1
-ITERATIONS = 1000
+ITERATIONS = 1500
 #%% model instance and training
 nn = NeuralNetwork(LR=LR, X_train=X_train_scale, y_train=y_train,X_test=X_test_scale, y_test=y_test)
 nn.train(ITERATIONS=ITERATIONS)
@@ -116,7 +116,7 @@ correct/total
 # the class distribution to estimate the outcome,
 # we will construct a baseline Classifier
 from collections import Counter
-Counter(y_test)
+Counter(y_test)[1]/(Counter(y_test)[0]+Counter(y_test)[1])
 # %% Confusion Matrix
 confusion_matrix(y_true=y_test, y_pred=y_preds)
 # %%
