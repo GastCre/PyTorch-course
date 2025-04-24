@@ -93,7 +93,7 @@ class NeuralNetwork:
         
 #%% Hyper parameters
 LR = 0.1
-ITERATIONS = 1500
+ITERATIONS = 1100
 #%% model instance and training
 nn = NeuralNetwork(LR=LR, X_train=X_train_scale, y_train=y_train,X_test=X_test_scale, y_test=y_test)
 nn.train(ITERATIONS=ITERATIONS)
