@@ -109,7 +109,7 @@ def train(NUM_EPOCHS):
         # Store loss
             losses_array[epoch,:,index]=float(loss.data)
         #losses.append(float(loss.data))
-        return losses_array, bias_array, slope_array
+    return losses_array, bias_array, slope_array
 # %% Plot function
 def param_space_plot(NUM_EPOCHS,losses_array,name):
     sns.set_palette(palette=sns.color_palette('husl', 10))
