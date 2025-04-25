@@ -99,10 +99,12 @@ for epoch in range(number_epochs):
         print(f"Epoch {epoch}, Loss: {loss.data}")
 
 # %% model state dict
-
+model.state_dict()
 # %% save model state dict
-
+torch.save(model.state_dict(),'model_state_dict.pth')
 # %% load a model
-
-
+model=LinearRegressionTorch(input_size=input_dim,output_size=output_dim)
+model.load_state_dict(torch.load('model_state_dict.pth'))
+# %%
+model.state_dict()
 # %%
