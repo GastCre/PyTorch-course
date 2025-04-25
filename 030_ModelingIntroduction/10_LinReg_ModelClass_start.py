@@ -83,7 +83,7 @@ sns.lineplot(x=X_list,y=y_pred, color='red')
 
 # %% Explore parameter space with epoch dependence
 def train(NUM_EPOCHS):
-    for index, l_rate in enumerate(np.linspace(0.001,1,10).tolist()):
+    for index, l_rate in enumerate(np.linspace(0.001,0.01,10).tolist()):
     # We set the gradients to zero
         model=LinearRegressionTorch(input_dim,output_dim)
         loss_funct=nn.MSELoss()
@@ -126,7 +126,7 @@ def param_space_plot(NUM_EPOCHS,losses_array,name):
     plt.tight_layout()
     plt.show()
 # %%
-for NUM_EPOCHS in np.linspace(1000,5000,3).tolist():
+for NUM_EPOCHS in np.linspace(1000,12000,3).tolist():
     NUM_EPOCHS=int(np.round(NUM_EPOCHS))
     losses_array=np.ones((NUM_EPOCHS,1,len(np.linspace(0.001,0.1,10).tolist())))
     bias_array=np.ones((NUM_EPOCHS,1,len(np.linspace(0.001,0.1,10).tolist())))
@@ -138,3 +138,5 @@ for NUM_EPOCHS in np.linspace(1000,5000,3).tolist():
     losses_array, bias_array, slope_array=[],[],[]
 plt.show()
 
+
+# %%
