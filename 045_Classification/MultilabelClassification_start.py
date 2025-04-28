@@ -97,11 +97,9 @@ for epoch in range(number_epochs):
 sns.lineplot(x=range(number_epochs),y=losses)
 # %% test the model
 # TODO: predict on test set
-
 #Evaluaition mode: no grads computed
-X_test_torch = torch.FloatTensor(X_test)
 with torch.no_grad():
-    y_test_hat = model(X_test_torch).round()
+    y_test_pred = model(X_test).round()
 
 #%% Naive classifier accuracy
 # TODO: convert y_test tensor [1, 1, 0] to list of strings '[1. 1. 0.]'
@@ -110,8 +108,14 @@ y_test_str = [str(i) for i in y_test.detach().numpy()]
 from collections import Counter
 most_common=Counter(y_test_str).most_common()[0][1]
 # TODO: print naive classifier accuracy
-print(f'Naive classifier accuracy: {np.round(most_common/(len(y_test)))*100}')
+print(f'Naive classifier accuracy: {most_common/(len(y_test))*100}')
 # %% Test accuracy
 # TODO: get test set accuracy
-print(f'Model accuracy: {accuracy_score(y_test,y_test_hat)}')
+print(f'Model accuracy: {accuracy_score(y_test,y_test_pred)}')
+# %% Naive classifier in pandas
+import pandas as pd
+y_test_pd=pd.DataFrame(y_test.detach().numpy())
+most_common_pd=y_test_pd.groupby([0,1,2]).size().max()
+print(f'Naive classifier accuracy: {most_common_pd/(len(y_test))*100}')
+
 # %%
