@@ -31,70 +31,87 @@ class MultilabelDataset(Dataset):
         return self.X[idx], self.y[idx]
 
 # TODO: create instance of dataset
-
+my_dataset=MultilabelDataset(X_train,y_train)
 # TODO: create train loader
-
+train_loader=DataLoader(dataset=my_dataset, batch_size=32, shuffle=True)
 
 # %% model
 # TODO: set up model class
+
+class MultilabelClassNN(nn.Module):
+    def __init__(self, num_features, num_classes, hidden_layers):
+        super(MultilabelClassNN, self).__init__()           
+        self.linear1=nn.Linear(num_features, hidden_layers)
+        self.relu=nn.ReLU()
+        self.linear2=nn.Linear(hidden_layers,num_classes)
+        self.sigmoid= nn.Sigmoid()
+    
+    def forward(self,x):
+        x=self.linear1(x)
+        x=self.relu(x)
+        x=self.linear2(x)
+        x=self.sigmoid(x)
+        return x
 # topology: fc1, relu, fc2
 # final activation function??
 
 
 # TODO: define input and output dim
-# input_dim = ??
-# output_dim = ??
+input_dim = my_dataset.X.shape[1]
+output_dim = my_dataset.y.shape[1]
 
 # TODO: create a model instance
-
-
+model=MultilabelClassNN(num_features=input_dim, num_classes=output_dim,hidden_layers=20)
 # %% loss function, optimizer, training loop
 # TODO: set up loss function and optimizer
-# loss_fn = ??
-# optimizer = ??
+loss_fn = nn.BCEWithLogitsLoss()
+LR=0.01
+optimizer=torch.optim.Adam(model.parameters(),lr=LR)
 losses = []
 slope, bias = [], []
 number_epochs = 100
 
 # TODO: implement training loop
 for epoch in range(number_epochs):
-    pass
-    # for j, data in enumerate(train_loader):
-        
-        # optimization
-
-
+    for j, (X,y) in enumerate(train_loader):
+        # optimization zeroing
+        optimizer.zero_grad()
         # forward pass
-
+        y_pred=model(X)
 
         # compute loss
-
+        loss=loss_fn(y_pred,y)
         
         # backward pass
-
+        loss.backward()
 
         # update weights
-
-        
+        optimizer.step()
+    losses.append(loss.item())
     # TODO: print epoch and loss at end of every 10th epoch
-    
+    if (epoch % 10 == 0):
+        print(f'Epoch: {epoch}. Loss: {loss}')
     
 # %% losses
 # TODO: plot losses
-
+sns.lineplot(x=range(number_epochs),y=losses)
 # %% test the model
 # TODO: predict on test set
 
+#Evaluaition mode: no grads computed
+X_test_torch = torch.FloatTensor(X_test)
+with torch.no_grad():
+    y_test_hat = model(X_test_torch).round()
 
 #%% Naive classifier accuracy
 # TODO: convert y_test tensor [1, 1, 0] to list of strings '[1. 1. 0.]'
-
+y_test_str = [str(i) for i in y_test.detach().numpy()]
 # TODO: get most common class count
-
+from collections import Counter
+most_common=Counter(y_test_str).most_common()[0][1]
 # TODO: print naive classifier accuracy
-
-
+print(f'Naive classifier accuracy: {np.round(most_common/(len(y_test)))*100}')
 # %% Test accuracy
 # TODO: get test set accuracy
-
+print(f'Model accuracy: {accuracy_score(y_test,y_test_hat)}')
 # %%
