@@ -1,10 +1,14 @@
 #%% package import
+import sys
+sys.path.append('/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/065_CNN_AudioClassification/')
 import torchaudio
 from plot_audio  import plot_specgram
 import os
 import random
 # %%
-wav_path = 'data/set_a'
+torchaudio.info
+#%%
+wav_path = '/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/065_AudioClassification/data/set_a'
 wav_filenames = os.listdir(wav_path)
 random.shuffle(wav_filenames)
 
