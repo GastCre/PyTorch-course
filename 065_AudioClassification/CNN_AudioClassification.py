@@ -8,6 +8,7 @@ import os
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 from sklearn.metrics import accuracy_score, confusion_matrix
 os.getcwd()
 
@@ -34,12 +35,12 @@ NUM_CLASSES = len(CLASSES)
 class ImageMulticlassClassificationNet(nn.Module):
     def __init__(self) -> None:
         super().__init__()
-        self.conv1=nn.Conv2d(1,8,3)
+        self.conv1=nn.Conv2d(1,6,3,padding=1) #Due to padding we don't subtract 2
         self.pool=nn.MaxPool2d(2,2)
-        self.conv2=nn.Conv2d(8,16,3)
+        self.conv2=nn.Conv2d(6,16,3,padding=1)
         self.flatten=nn.Flatten()
-        self.fc1=nn.Linear(16*23*23,2*128) #Input= {[(50-2)/2]-2}/2
-        self.fc2=nn.Linear(2*128,64)
+        self.fc1=nn.Linear(16*25*25,128) #Input= {[(50-2)/2]-2}/2
+        self.fc2=nn.Linear(128,64)
         self.fc3=nn.Linear(64,NUM_CLASSES)
         self.softmax=nn.LogSoftmax()
         self.relu=nn.ReLU()
@@ -69,8 +70,10 @@ model = ImageMulticlassClassificationNet()
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters()) #We use Adam
 # %% training
-NUM_EPOCHS = 15
+NUM_EPOCHS = 100
+losses_epoch_mean=[]
 for epoch in range(NUM_EPOCHS):
+    losses_epoch=[]
     for i, data in enumerate(train_loader, 0):
         inputs, labels = data
         # TODO: define training loop
@@ -84,8 +87,12 @@ for epoch in range(NUM_EPOCHS):
         loss.backward()
         #update weights
         optimizer.step()
-
+        losses_epoch.append(loss.item())
+    losses_epoch_mean.append(np.mean(losses_epoch))
     print(f'Epoch {epoch}/{NUM_EPOCHS}, Loss: {loss.item():.4f}')
+
+#%% Plot losses
+sns.lineplot(x=list(range(len(losses_epoch))),y=losses_epoch)
 
 
 # %% test
