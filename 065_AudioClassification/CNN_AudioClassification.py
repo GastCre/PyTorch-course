@@ -14,7 +14,7 @@ os.getcwd()
 # %% transform and load data
 # TODO: set up image transforms
 transform=transforms.Compose([
-    transforms.Resize((50,50)),
+    transforms.Resize((100,100)),
     transforms.Grayscale(num_output_channels=1),
     transforms.ToTensor(),
     transforms.Normalize((0.5,),(0.5,))
@@ -34,12 +34,12 @@ NUM_CLASSES = len(CLASSES)
 class ImageMulticlassClassificationNet(nn.Module):
     def __init__(self) -> None:
         super().__init__()
-        self.conv1=nn.Conv2d(1,6,3)
+        self.conv1=nn.Conv2d(1,8,3)
         self.pool=nn.MaxPool2d(2,2)
-        self.conv2=nn.Conv2d(6,16,3)
+        self.conv2=nn.Conv2d(8,16,3)
         self.flatten=nn.Flatten()
-        self.fc1=nn.Linear(16*11*11,128) #Input= {[(50-2)/2]-2}/2
-        self.fc2=nn.Linear(128,64)
+        self.fc1=nn.Linear(16*23*23,2*128) #Input= {[(50-2)/2]-2}/2
+        self.fc2=nn.Linear(2*128,64)
         self.fc3=nn.Linear(64,NUM_CLASSES)
         self.softmax=nn.LogSoftmax()
         self.relu=nn.ReLU()
@@ -69,7 +69,7 @@ model = ImageMulticlassClassificationNet()
 loss_fn = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters()) #We use Adam
 # %% training
-NUM_EPOCHS = 10
+NUM_EPOCHS = 15
 for epoch in range(NUM_EPOCHS):
     for i, data in enumerate(train_loader, 0):
         inputs, labels = data
