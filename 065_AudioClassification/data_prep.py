@@ -16,6 +16,9 @@ data_names=os.listdir(data_path)
 # We apply the name extraction function to all the elements of the list and then extract the unique values
 matching_files = [x for x in data_names if re.findall(r'(\w+)__', x)]
 tags = list(dict.fromkeys([re.findall(r'(\w+)__', x)[0] for x in matching_files]))
+
+# We drop the Aunlabelledtest class:
+tags.remove('Aunlabelledtest')
 print(tags)
 #%% 
 # We have to separate between test and train images, so we define the test size
@@ -46,6 +49,6 @@ for name in data_names:
                 data_waveform, sr = torchaudio.load(file_path)
                 plot_specgram(waveform=data_waveform, sample_rate=sr,file_path=data_path+'/test/'+class_tag+'/'+id+'.png')
                 file_n=file_n+1
-#%%
-print(round(test_size*len(data_names)))
+
+
 # %%
