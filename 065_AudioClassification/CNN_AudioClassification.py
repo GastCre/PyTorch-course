@@ -118,3 +118,4 @@ print(f'Accuracy: {acc*100:.2f} %')
 cm=confusion_matrix(y_test, np.argmax(y_test_hat, axis=1))
 sns.heatmap(cm,annot=True, xticklabels=CLASSES,yticklabels=CLASSES)
 # %%
+#100% Accuracy seems to be an overfitting problem, due to 80% of the set being for testing
