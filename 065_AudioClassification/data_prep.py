@@ -20,7 +20,7 @@ print(tags)
 #%% 
 # We have to separate between test and train images, so we define the test size
 train_size=0.2
-#%%
+
 # Now we iterate over the names, create the spectrogram and save it
 # in the corresponding folder
 
