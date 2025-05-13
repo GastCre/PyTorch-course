@@ -92,8 +92,7 @@ for epoch in range(NUM_EPOCHS):
     print(f'Epoch {epoch}/{NUM_EPOCHS}, Loss: {loss.item():.4f}')
 
 #%% Plot losses
-sns.lineplot(x=list(range(len(losses_epoch))),y=losses_epoch)
-
+sns.lineplot(x=list(range(len(losses_epoch_mean))),y=losses_epoch_mean)
 
 # %% test
 y_test = []
@@ -105,10 +104,17 @@ for i, data in enumerate(test_loader, 0):
     
     y_test.extend(y_test_temp.numpy())
     y_test_hat.extend(y_test_hat_temp.numpy())
-
+#%% Baseline classifier
+from collections import Counter
+most_common=Counter(y_test).most_common()[0][1]
+# TODO: print naive classifier accuracy
+print(f'Baseline classifier accuracy: {most_common/(len(y_test))*100}')
+#%%
+Counter(y_test)
 # %%
 acc = accuracy_score(y_test, np.argmax(y_test_hat, axis=1))
 print(f'Accuracy: {acc*100:.2f} %')
 # %% confusion matrix
-confusion_matrix(y_test, np.argmax(y_test_hat, axis=1))
+cm=confusion_matrix(y_test, np.argmax(y_test_hat, axis=1))
+sns.heatmap(cm,annot=True, xticklabels=CLASSES,yticklabels=CLASSES)
 # %%

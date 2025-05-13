@@ -22,7 +22,7 @@ tags.remove('Aunlabelledtest')
 print(tags)
 #%% 
 # We have to separate between test and train images, so we define the test size
-train_size=0.2
+train_size=0.4
 
 # Now we iterate over the names, create the spectrogram and save it
 # in the corresponding folder
@@ -51,4 +51,6 @@ for name in data_names:
                 file_n=file_n+1
 
 
+# %%
+140/176
 # %%
