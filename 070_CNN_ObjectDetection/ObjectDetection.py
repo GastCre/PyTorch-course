@@ -6,9 +6,9 @@ import numpy as np
 
 
 #%% data download
-path_images = 'images'
-path_train_labels = 'train_labels'
-path_test_labels = 'test_labels'
+path_images = '/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/070_CNN_ObjectDetection/images'
+path_train_labels = '/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/070_CNN_ObjectDetection/train_labels'
+path_test_labels = '/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/070_CNN_ObjectDetection/test_labels'
 
 # %% data augmentation
 custom_transforms = transforms.Compose([
@@ -30,18 +30,21 @@ train_loader = core.DataLoader(train_dataset, batch_size=2, shuffle=False)
 test_loader = core.DataLoader(test_dataset, batch_size=2, shuffle=False)
 # %% initialize model
 model = core.Model(trained_labels)
+
+# get internal model
+model.get_internal_model()
 # %% perform the training
 losses = model.fit(train_loader, test_dataset, epochs=2, verbose=True)
 
 # %% show image with predictions
-test_image_path = 'images/apple_77.jpg'
+test_image_path = '/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/070_CNN_ObjectDetection/images/apple_77.jpg'
 test_image = utils.read_image(test_image_path)
 pred = model.predict(test_image)
 labels, boxes, scores = pred
 show_labeled_image(test_image, boxes, labels)
 
 #%% show image with predictions above confidence threshold
-conf_threshold = 0.7
+conf_threshold = 0.5
 filtered_indices = np.where(scores > conf_threshold)
 filteres_scores = scores[filtered_indices]
 filtered_boxes = boxes[filtered_indices]
@@ -65,3 +68,5 @@ for j, data in enumerate(train_loader):
     print(j)
     image, label = data
     print(label)
+
+# %%
