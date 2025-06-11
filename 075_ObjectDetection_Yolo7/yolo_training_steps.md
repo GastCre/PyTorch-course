@@ -36,6 +36,11 @@ Download from Kaggle [here](https://www.kaggle.com/datasets/andrewmvd/face-mask-
 (pytorch) C:\...> python train.py --weights yolov7-e6e.pt --data data/masks.yaml --workers 1 --batch-size 4 --img 416 --cfg cfg/training/yolov7-masks.yaml --name yolov7 --epochs 5
 ```
 
+In my case
+```
+python "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7/yolov7/train.py" --weights "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7/yolov7/yolov7-e6e.pt" --data "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7/yolov7/data/masks.yaml" --workers 1 --batch-size 4 --img 416 --cfg "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7/yolov7/cfg/training/yolov7-masks.yaml" --name yolov7 --epochs 5
+```
+
 ## 8. Detection
 
 ```
