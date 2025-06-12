@@ -46,3 +46,8 @@ python "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorc
 ```
 (pytorch) C:\...> python detect.py --weights runs/train/yolov7/weights/best.pt --conf 0.4 --img-size 640 --source ./test/images/maksssksksss824.png
 ```
+
+In my case
+```
+python "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7/yolov7/detect.py" --weights "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/runs/train/yolov710/weights/best.pt" --conf 0.4 --img-size 640 --source "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7/yolov7/test/images/maksssksksss824.png"
+```

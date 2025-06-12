@@ -1,8 +1,8 @@
-train: C:/Projects/PytorchUltimateMaterial/076_ObjectDetection_Yolo8/train_custom/train
-val: C:/Projects/PytorchUltimateMaterial/076_ObjectDetection_Yolo8/train_custom/val
-test: C:/Projects/PytorchUltimateMaterial/076_ObjectDetection_Yolo8/train_custom/test
+#path: /Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7  # dataset root dir
+train: /Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7/yolov7/train/images  # train images (relative to 'path')
+val: /Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7/yolov7/val/images      # val images (relative to 'path')
+test: /Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/075_ObjectDetection_Yolo7/yolov7/test/images    # test images (optional)
 
 # Classes
 nc: 3  # number of classes
-names: ['with_mask', 'without_mask', 'mask_weared_incorrect']
-
+names: ['with_mask', 'without_mask', 'mask_weared_incorrect']  # class names

@@ -6,6 +6,7 @@ annotations/
 yolov7/
 train/
 val/
+runs/
 test/
 *.pt
 .vector_cache/
