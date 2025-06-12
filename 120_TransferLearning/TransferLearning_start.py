@@ -12,8 +12,8 @@ from sklearn.metrics import accuracy_score
 # %% data prep
 # original data from https://www.microsoft.com/en-us/download/details.aspx?id=54765
 
-train_dir = 'train' 
-test_dir =  'test'
+train_dir = '/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/120_TransferLearning/train' 
+test_dir =  '/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/120_TransferLearning/test'
 
 transform = transforms.Compose([transforms.Resize(255), 
     transforms.CenterCrop(224), 
@@ -44,14 +44,13 @@ model = models.densenet121(pretrained = True)
 #%% keep feature layers
 # TODO: freeze all layers
 for params in model.parameters():
-    params.requires_grad = False
+    params.requires_grad=False
 #%% overwrite classifier of model
 # TODO: overwrite classifier of model
-model.classifier = nn.Sequential(OrderedDict([
-    ('fc1',nn.Linear(1024,1)),
-    ('Output',nn.Sigmoid())
-]))
-
+model.classifier=nn.Sequential(OrderedDict([
+    ('fc1', nn.Linear(1024,1)),
+    ('Output', nn.Sigmoid()) #In: 1024 same as model. Out: 1
+    ]))
 # %% train the model
 opt = optim.Adam(model.classifier.parameters()) 
 loss_function = nn.BCELoss() 
@@ -93,7 +92,7 @@ sns.lineplot(x = range(len(train_losses)), y = train_losses)
 # %%
 fig = plt.figure(figsize=(10, 10)) 
 class_labels = {0:'cat', 1:'dog'} 
-X_test, y_test = iter(test_loader).next() 
+X_test, y_test = next(iter(test_loader) )
 with torch.no_grad():
     y_pred = model(X_test) 
     y_pred = y_pred.round()
