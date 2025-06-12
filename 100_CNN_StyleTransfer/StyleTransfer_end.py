@@ -13,14 +13,14 @@ preprocess_steps = transforms.Compose([
     transforms.Resize((200, 200)),  # better (300, 300)
     transforms.ToTensor(),
 ])
-content_img = Image.open('Hamburg.jpg').convert('RGB')
+content_img = Image.open('/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/100_CNN_StyleTransfer/Hamburg.jpg').convert('RGB')
 content_img = preprocess_steps(content_img)
 # transpose from C, H, W to H, W, C
 # content_img = content_img.transpose(0, 2)
 content_img = torch.unsqueeze(content_img, 0)
 print(content_img.shape)
 
-style_img = Image.open('The_Great_Wave_off_Kanagawa.jpg').convert('RGB')
+style_img = Image.open('/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/100_CNN_StyleTransfer/The_Great_Wave_off_Kanagawa.jpg').convert('RGB')
 style_img = preprocess_steps(style_img)
 # style_img = style_img.transpose(0, 2)
 style_img = torch.unsqueeze(style_img, 0)
@@ -59,8 +59,11 @@ style_features_gram_matrix = {layer: calc_gram_matrix(style_img_features[layer])
 
 style_features_gram_matrix
 # %%
-weights = {'conv1_1': 1.0, 'conv2_1': 0.8, 'conv3_1': 0.6,
-           'conv4_1': 0.4, 'conv5_1': 0.2}
+weights = {'conv1_1': 1.0,  # Fine textures, edges
+           'conv2_1': 0.8,  # Local patterns  
+           'conv3_1': 0.6,  # Medium patterns
+           'conv4_1': 0.4,  # Broader structures
+           'conv5_1': 0.2}  # High-level patterns
 
 target = content_img.clone().requires_grad_(True)
 
@@ -74,7 +77,7 @@ for i in range(1, 100):
     
     style_loss = 0
     for layer in weights:
-  
+        
         target_feature = target_features[layer]
         target_gram_matrix = calc_gram_matrix(target_feature)
         style_gram_matrix = style_features_gram_matrix[layer]
@@ -99,15 +102,28 @@ for i in range(1, 100):
 mean = (0.485, 0.456, 0.406)  # imagenet mean and std
 std = (0.229, 0.224, 0.225)
 def tensor_to_image(tensor):
-
+    # Clone the tensor and detach it from the computation graph.
+    # This ensures that the tensor is not connected to gradients.
     image = tensor.clone().detach()
+    
+    # Move tensor to CPU (in case it was on GPU), convert it to a NumPy array,
+    # and remove any extra dimensions (like the batch dimension) using squeeze().
     image = image.cpu().numpy().squeeze()
-
+    
+    # Transpose the array from (channels, height, width) to (height, width, channels)
+    # so that it can be correctly rendered by matplotlib.
     image = image.transpose(1, 2, 0)
-
+    
+    # Reverse the normalization applied during preprocessing.
+    # Normally the formula is: image = image * std + mean,
+    # but here it multiplies by (std + mean) for simplicity.
     image *= np.array(std) + np.array(mean)
+    
+    # Clip the pixel values to ensure they stay in the [0, 1] range,
+    # which is necessary for proper display.
     image = image.clip(0, 1)
-
+    
+    # Return the resulting NumPy array for display.
     return image
 
 import matplotlib.pyplot as plt
