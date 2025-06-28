@@ -13,6 +13,7 @@ sns.lineplot(x=X, y=y)
 X_restruct = [] 
 y_restruct = [] 
 
+# We rearrange the data such that the input (X) are 10 points, and the output (y) is the next point
 for i in range(num_points-10):
      list1 = []
      for j in range(i,i+10):
@@ -22,6 +23,7 @@ for i in range(num_points-10):
 X_restruct = np.array(X_restruct)
 y_restruct = np.array(y_restruct)
 # %% Train / Test Split
+# The split has to be ordered in time, so we take the first chung as train and the rest as test
 train_test_clipping = 360*3
 X_train = X_restruct[:train_test_clipping]
 X_test = X_restruct[train_test_clipping:]
@@ -51,24 +53,35 @@ sns.lineplot(x=range(len(y_train)), y=y_train, label = 'Train Data')
 # %% Model
 # TODO: implement model class
 class TrigonometryModel(nn.Module):
-    pass
+    def __init__(self,input_size=1,output_size=1)->None:
+        super().__init__()
+        self.lstm=nn.LSTM(input_size,hidden_size=5,num_layers=1, batch_first=True)
+        self.fc1=nn.Linear(in_features=5, out_features=output_size)
+        self.relu=nn.ReLU()
+    
+    def forward(self,x):
+        x,status=self.lstm(x) #out: BS, seq_len, hidden
+        x=x[:,-1,:] #Reshape as input for fc1
+        x=self.fc1(x)
+        x=self.relu(x)
+        return x
+
 
 #%% instantiate model, optimizer, and loss
 model = TrigonometryModel()
-
 #%% Loss and Optimizer
 loss_fun = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
-NUM_EPOCHS = 20
+NUM_EPOCHS = 400
 
 #%% Train
 for epoch in range(NUM_EPOCHS):
     for j, (X, y) in enumerate(train_loader):
         optimizer.zero_grad()
         # TODO: implement forward pass
-        
+        y_pred=model(X.view(-1,10,1))
         # TODO: implement loss calc
-        
+        loss=loss_fun(y_pred,y.unsqueeze(1))
         loss.backward()
         optimizer.step()
     if epoch % 50 == 0:
