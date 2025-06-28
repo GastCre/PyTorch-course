@@ -16,7 +16,7 @@ print(f'Number of Entries: {len(data)}')
 data.head()
 
 # %%
-sns.lineplot(data.index, data.passengers, data=data)
+sns.lineplot(x=data.index, y=data.passengers, data=data, hue=data.year)
 # %%
 # Convert passenter data to float32 for PyTorch
 num_points = len(data)
@@ -29,6 +29,16 @@ Xy_scaled = scaler.fit_transform(Xy.reshape(-1, 1))
 
 
 # %% Data Restructuring
+X_restr=[]
+y_restr=[]
+for i in range(num_points-10):
+    list1=[]
+    for j in range(i,i+10):
+        list1.append(data.passengers[j])
+    X_restr.append(list1)
+    y_restr.append(data.passengers[j+1])
+X_restr=np.array(X_restr)
+y_restr=np.array(y_restr)
 
 #%% train/test split
 
