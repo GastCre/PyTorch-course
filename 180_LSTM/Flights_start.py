@@ -90,7 +90,7 @@ model = FlightModel()
 
 loss_fun = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters())
-NUM_EPOCHS = 200
+NUM_EPOCHS = 600
 
 #%% Train
 # TODO: create the training loop
