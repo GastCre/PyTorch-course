@@ -97,7 +97,7 @@ for epoch in range(number_epochs):
 sns.lineplot(x=range(number_epochs),y=losses)
 # %% test the model
 # TODO: predict on test set
-#Evaluaition mode: no grads computed
+#Evaluation mode: no grads computed
 with torch.no_grad():
     y_test_pred = model(X_test).round()
 
