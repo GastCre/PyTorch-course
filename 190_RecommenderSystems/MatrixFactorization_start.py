@@ -26,6 +26,7 @@ class MovieDataset(Dataset):
     def __getitem__(self, idx):
         users=self.users[idx]
         movies=self.movies[idx]
+        ratings=self.ratings[idx]
         return torch.tensor(users,dtype=torch.long), torch.tensor(movies, dtype=torch.long), torch.tensor(ratings, dtype=torch.long)
 #%% Model Class
 class RecSysModel(nn.Module):
@@ -42,8 +43,12 @@ class RecSysModel(nn.Module):
         x = self.out(x) # Linear layer
         return x
 #%% encode user and movie id to start from 0 
-
+lbl_user=preprocessing.LabelEncoder()
+lbl_movie = preprocessing.LabelEncoder()
+df['userId']=lbl_user.fit_transform(df['userId'])
+df['movieId']=lbl_movie.fit_transform(df['movieId'])
 #%% create train test split
+df_train, df_test = model_selection.train_test_split(df, test_size=0.2, random_state=123)
 
 #%% Dataset Instances
 train_dataset = MovieDataset(
@@ -105,5 +110,44 @@ with torch.no_grad():
 mse = mean_squared_error(y_trues, y_preds)
 print(f"Mean Squared Error: {mse}")
 #%% Users and Items
-
+user_movie_test = defaultdict(list)
 #%% Precision and Recall
+with torch.no_grad(): #We check the predictions
+    for users, movies, ratings in test_loader: 
+        y_pred = model(users, movies)
+        for i in range(len(users)):
+            user_id=users[i].item()
+            movie_id=movies[i].item()
+            pred_rating=y_pred[i][0].item()
+            true_rating=ratings[i].item()
+            print(f"User: {user_id}, Movie: {movie_id}, Pred: {pred_rating}, True: {true_rating} ")
+            user_movie_test[user_id].append((pred_rating, true_rating))
+
+# %% Precision@k and Recall@k
+precisions={}
+recalls={}
+
+k=10
+thres=3.5  #We select the relevant films with ratings above 3.5
+
+for uid, user_ratings in user_movie_test.items():
+    # Sort user rating by ratings
+    user_ratings.sort(key=lambda x: x[0], reverse=True)
+    
+    # Count of relevant items
+    n_rel = sum((rating_true >= thres) for (_,rating_true) in user_ratings)
+
+    # Count of recommended items that are predicted relevant with top k
+    n_rel_k = sum((pred_rating >= thres) for (pred_rating,_) in user_ratings[:k])
+    
+    # Count of recommended AND relevant items
+    n_rel_and_rec_k = sum((rating_true >= thres) and (pred_rating >= thres) for (pred_rating,rating_true) in user_ratings[:k])
+
+    print(f" Uid: {uid}, n_rel: {n_rel}, n_rec_k: {n_rel_k}, n_rel_and_rec_k: {n_rel_and_rec_k}")
+
+    precisions[uid] = n_rel_and_rec_k/n_rel_k if n_rel_k != 0 else 0
+    recalls[uid] = n_rel_and_rec_k/n_rel if n_rel != 0 else 0
+# %% Results
+print(f"Precision@{k}: {sum(precisions.values())/ len(precisions)}")
+print(f"Recall@{k}: {sum(recalls.values())/ len(recalls)}")
+# %%
