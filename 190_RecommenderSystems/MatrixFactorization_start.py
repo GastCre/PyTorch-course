@@ -7,14 +7,40 @@ from torch.utils.data import Dataset, DataLoader
 from collections import defaultdict
 from sklearn.metrics import mean_squared_error
 #%% data import
-df = pd.read_csv("ratings.csv")
+df = pd.read_csv("/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/190_RecommenderSystems/ratings.csv")
 df.head(2)
 #%%
 print(f"Unique Users: {df.userId.nunique()}, Unique Movies: {df.movieId.nunique()}")
 
 #%% Data Class
-       
+class MovieDataset(Dataset):
+    def __init__(self, users, movies, ratings)->None:
+        super().__init__()
+        self.users=users
+        self.movies=movies
+        self.ratings=ratings
+
+    def __len__(self):
+        return len(self.users)
+    
+    def __getitem__(self, idx):
+        users=self.users[idx]
+        movies=self.movies[idx]
+        return torch.tensor(users,dtype=torch.long), torch.tensor(movies, dtype=torch.long), torch.tensor(ratings, dtype=torch.long)
 #%% Model Class
+class RecSysModel(nn.Module):
+    def __init__(self, n_users, n_movies, n_embeddings=32):
+        super().__init__()
+        self.user_embed=nn.Embedding(n_users, n_embeddings)
+        self.movie_embed=nn.Embedding(n_movies, n_embeddings)
+        self.out = nn.Linear(n_embeddings * 2, 1) # n_embeddings x 2 because we have 2 embedding layers, and 1 output
+
+    def forward(self, users, movies):
+        user_embeds=self.user_embed(users) #Embedding user
+        movie_embeds=self.movie_embed(movies) #Embedding movie
+        x = torch.cat([user_embeds,movie_embeds],dim=1) #Tensor concatenation
+        x = self.out(x) # Linear layer
+        return x
 #%% encode user and movie id to start from 0 
 
 #%% create train test split
