@@ -107,7 +107,7 @@ def show_image(img):
     npimg = img.numpy()
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
 
-images, labels = iter(dataloader).next()
+images, labels = next(iter(dataloader))
 print('original')
 plt.rcParams["figure.figsize"] = (20,3)
 show_image(torchvision.utils.make_grid(images))
@@ -126,3 +126,5 @@ show_image(torchvision.utils.make_grid(model(images)))
 image_size = images.shape[2] * images.shape[3] * 1
 compression_rate = (1 - LATENT_DIMS / image_size) * 100
 compression_rate
+
+# %%
