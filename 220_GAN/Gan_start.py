@@ -110,14 +110,12 @@ for epoch in range(NUM_EPOCHS):
         plt.xlim((-20, 20))
         plt.ylim((-20, 15))
         plt.text(10, 15, f"Epoch {epoch}")
-        plt.show()
         if not os.path.exists("/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/train_progress"):
             os.makedirs("/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/train_progress")
         plt.savefig(f"/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/train_progress/image{str(epoch).zfill(3)}.jpg")
-
+        plt.show()
 
     
-
 # %% check the result
 latent_space_samples = torch.randn(10000, 2)
 generated_samples = generator(latent_space_samples)
