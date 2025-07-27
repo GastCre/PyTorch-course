@@ -1,6 +1,7 @@
 #%% packages
 import torch
 from torch.utils.data import DataLoader
+from torchvision.datasets import ImageFolder
 from torch import nn
 import os
 import math
@@ -27,7 +28,7 @@ plt.grid(None)
 plt.savefig("/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/Heart_fig.jpg")
 im=Image.open("/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/Heart_fig.jpg")
 #%% Data augmentation and tranformation to tensor
-custom_transforms = transforms.Compose([
+transforms = transforms.Compose([
     transforms.Resize((50,50)),
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(15),
@@ -36,6 +37,9 @@ custom_transforms = transforms.Compose([
 ])
 im_gan = custom_transforms(im)
  #%% prepare tensors and dataloader
+train_dir="/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/Heart_fig.jpg"
+dataset = ImageFolder(train_dir, transform= transform) 
+train_loader = torch.utils.data.DataLoader(dataset, batch_size=128,shuffle=True) 
 train_labels = torch.zeros(50)
 train_set = [
     (train_data[i], train_labels[i]) for i in range(TRAIN_DATA_COUNT)
