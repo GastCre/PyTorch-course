@@ -8,6 +8,8 @@ train/
 val/
 runs/
 test/
+220_GAN/saved_images_ex/
+220_GAN/train_im/
 *.pt
 .vector_cache/
 tweets_X.pkl

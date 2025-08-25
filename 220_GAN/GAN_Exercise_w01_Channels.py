@@ -1,5 +1,5 @@
 ## GAN Exercise With 01 Color Channel
-
+#%%
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -88,7 +88,8 @@ transforms = transforms.Compose([
 
 BATCH_SIZE = 1##32
 
-path_images = './data/'
+path_images = "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/train_im"
+
 #path_images = '/Users/luis/Documents/Programming/Courses_Programming/0758 PyTorch Ultimate 2023 From Basics to Cutting Edge/venv_0758_PyTorch_From_Basics_Cutting_Edge_310_001/github_DataScienceHamburg/PyTorchUltimateMaterial/220_GAN/data/'
 
 train_dataset = ImageFolder(root=path_images, transform=transforms)
@@ -160,7 +161,7 @@ for epoch in range(NUM_EPOCHS):
             loss_generator.backward()
             optimizer_generator.step()
             
-        if epoch % 1000 == 0:
+        if epoch % 100 == 0:
             print(f"Epoch: [{epoch}/{NUM_EPOCHS}]")
             ## Note: Sometimes it works when I comment out the next line
             #print(f"Epoch: [{epoch}/{NUM_EPOCHS}], Discriminator Loss: {loss_discriminator}, Generator Loss: {loss_generator}")## Commenting this line makes it work
@@ -175,4 +176,5 @@ for epoch in range(NUM_EPOCHS):
                 generated_samples_processed = generated_samples_processed.view(28, 28, 1)
                 plt.imshow(generated_samples_processed, cmap='viridis')##cmap='gray', 'bone'
                 plt.grid(False)
-                plt.savefig(f"./saved_images/saved_fig_GAN_01Ch_{epoch}_{NUM_EPOCHS}.png")
+                plt.savefig(f"/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/saved_images/saved_fig_GAN_01Ch_{epoch}_{NUM_EPOCHS}.png")
+# %%
