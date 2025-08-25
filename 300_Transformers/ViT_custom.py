@@ -5,13 +5,13 @@ import pandas
 #%% Packages
 from hugsvision.dataio.VisionDataset import VisionDataset
 from hugsvision.nnet.VisionClassifierTrainer import VisionClassifierTrainer
-from transformers import ViTFeatureExtractor, ViTForImageClassification
+from transformers import ViTFeatureExtractor, ViTForImageClassification, TrainingArguments
 from hugsvision.inference.VisionClassifierInference import VisionClassifierInference
 
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, accuracy_score
 
 #%% data prep
 train, val, id2label, label2id = VisionDataset.fromImageFolder(
@@ -26,24 +26,26 @@ train, val, id2label, label2id = VisionDataset.fromImageFolder(
 huggingface_model = 'google/vit-base-patch16-224-in21k'
 
 trainer = VisionClassifierTrainer(
-	model_name   = "MyDogClassifier",
-	train        = train,
-	test         = val,
-	output_dir   = "./out/",
-	max_epochs   = 20,
-	batch_size   = 4, 
-	lr	     = 2e-5,
-	fp16	     = True,
-	model = ViTForImageClassification.from_pretrained(
-	    huggingface_model,
-	    num_labels = len(label2id),
-	    label2id   = label2id,
-	    id2label   = id2label
-	),
-	feature_extractor = ViTFeatureExtractor.from_pretrained(
-		huggingface_model,
-	),
+    model_name   = "MyDogClassifier",
+    train        = train,
+    test         = val,
+    output_dir   = "./out/",
+    max_epochs   = 20,
+    batch_size   = 4, 
+    lr	         = 2e-5,
+    fp16	     = False,
+    eval_metric  = "loss",
+    model = ViTForImageClassification.from_pretrained(
+        huggingface_model,
+        num_labels = len(label2id),
+        label2id   = label2id,
+        id2label   = id2label
+    ),
+    feature_extractor = ViTFeatureExtractor.from_pretrained(
+        huggingface_model,
+    ),
 )
+
 
 #%% Model Evaluation
 y_true, y_pred = trainer.evaluate_f1_score()
