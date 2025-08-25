@@ -42,7 +42,7 @@ loss_criterion = torch.nn.CrossEntropyLoss()
 #%% Model training
 loss_lst=[]
 model.train()
-epochs=1000
+epochs=1500
 for epoch in range(epochs):
     optimizer.zero_grad
     y_pred=model(data.x,data.edge_index)
