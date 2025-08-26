@@ -1,7 +1,6 @@
 #%%
 # source: https://medium.com/@yanis.labrak/how-to-train-a-custom-vision-transformer-vit-image-classifier-to-help-endoscopists-in-under-5-min-2e7e4110a353
 import pandas
-#%%
 #%% Packages
 from hugsvision.dataio.VisionDataset import VisionDataset
 from hugsvision.nnet.VisionClassifierTrainer import VisionClassifierTrainer
@@ -15,7 +14,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 
 #%% data prep
 train, val, id2label, label2id = VisionDataset.fromImageFolder(
-    "./train/",
+    "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/300_Transformers/train",
     test_ratio   = 0.1,
     balanced     = True,
     augmentation = True, 
@@ -29,7 +28,7 @@ trainer = VisionClassifierTrainer(
     model_name   = "MyDogClassifier",
     train        = train,
     test         = val,
-    output_dir   = "./out/",
+    output_dir   = "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/300_Transformers/out/MYDOGCLASSIFIER",
     max_epochs   = 20,
     batch_size   = 4, 
     lr	         = 2e-5,
@@ -48,6 +47,10 @@ trainer = VisionClassifierTrainer(
 
 
 #%% Model Evaluation
+device = "cpu"
+trainer.model = trainer.model.to(device)
+trainer.feature_extractor.device = device  # Some extractors respect this
+
 y_true, y_pred = trainer.evaluate_f1_score()
 
 #%%
@@ -57,12 +60,12 @@ df_cm = pd.DataFrame(cm, index = labels, columns = labels)
 
 # plt.figure(figsize = (10,7))
 sns.heatmap(df_cm, annot=True, annot_kws={"size": 8}, fmt="")
-plt.savefig("./conf_matrix_1.jpg")
+plt.savefig("/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/300_Transformers/conf_matrix_1.jpg")
 
 # %% Inference
 import os.path
-path = "./out/MYDOGCLASSIFIER/20_2022-09-09-22-30-04/model/"
-img  = "./test/affenpinscher/affenpinscher_0.jpg"
+path = "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/300_Transformers/out/MYDOGCLASSIFIER/MYDOGCLASSIFIER/20_2025-08-26-10-14-54/model/"
+img  = "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/300_Transformers/test/affenpinscher/affenpinscher_0.jpg"
 
 classifier = VisionClassifierInference(
     feature_extractor = ViTFeatureExtractor.from_pretrained(path),
@@ -74,7 +77,7 @@ print("Predicted class:", label)
 
 # %% Test dataset
 test, _, id2label, label2id = VisionDataset.fromImageFolder(
-    "./test/",
+    "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/300_Transformers/test/",
     test_ratio   = 0,
     balanced     = True,
     augmentation = True, 
@@ -83,8 +86,8 @@ test, _, id2label, label2id = VisionDataset.fromImageFolder(
 
 classifier.predict(img)
 # %% 
-import glob
-test_files = [f for f in glob.glob("./test/**/**", recursive=True) if os.path.isfile(f)]
+import glob #we import glob to explore the subfolders
+test_files = [f for f in glob.glob("/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/300_Transformers/test/**/**", recursive=True) if os.path.isfile(f)]
 # %%
 for i in range(len(test_files)):
 	print(f"{test_files[i]}")
