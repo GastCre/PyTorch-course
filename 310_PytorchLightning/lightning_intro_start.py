@@ -40,5 +40,42 @@ class LinearRegressionDataset(Dataset):
 train_loader = DataLoader(dataset = LinearRegressionDataset(X_np, y_np), batch_size=2)
 
 
-
 #%%
+class LitLinearRegression(pl.LightningModule):
+    def __init__(self, input_size, output_size):
+        super(LitLinearRegression,self).__init__()
+        self.linear = nn.Linear(input_size,output_size)
+        self.loss_fun=nn.MSELoss()
+    
+    def forward(self,x):
+        return self.linear(x)
+    
+    def configure_optimizers(self):
+        learning_rate=0.02
+        optimizer = torch.optim.SGD(self.parameters(), lr=learning_rate)
+        return optimizer
+    
+    def training_step(self,train_batch):
+        X,y = train_batch
+
+        #forward pass
+        y_pred = self.forward(X)
+
+        #calc losses
+        loss=self.loss_fun(y_pred,y)
+        self.log('train_loss', loss, prog_bar=True)
+        return loss
+#%% Model instantation
+model = LitLinearRegression(input_size=1,output_size=1)
+
+#%% Early stopping
+early_stop_callback = EarlyStopping(monitor='train_loss', patience=2, verbose=True, mode='min')
+
+trainer = pl.Trainer(devices=1, max_epochs=500, log_every_n_steps=2, callbacks=[early_stop_callback])
+trainer.fit(model=model, train_dataloaders=train_loader)
+#%% Check current epoch smaller than 500
+trainer.current_epoch
+# %% We check it works as in previous codes
+for parameter in model.parameters():
+    print(parameter)
+# %%
