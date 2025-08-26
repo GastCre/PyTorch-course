@@ -10,7 +10,7 @@ from hugsvision.inference.VisionClassifierInference import VisionClassifierInfer
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.metrics import confusion_matrix
 
 #%% data prep
 train, val, id2label, label2id = VisionDataset.fromImageFolder(
