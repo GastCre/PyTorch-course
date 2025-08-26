@@ -22,8 +22,8 @@ transform_super = transforms.Compose(
     transforms.Normalize((0.5, ), (0.5, ))])
 
 #%% Dataset for train and test
-train_ds = torchvision.datasets.ImageFolder(root='data/train', transform=transform_super)
-test_ds = torchvision.datasets.ImageFolder(root='data/test', transform=transform_super)
+train_ds = torchvision.datasets.ImageFolder(root='/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/350_SemiSupervised/data/train', transform=transform_super)
+test_ds = torchvision.datasets.ImageFolder(root='/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/350_SemiSupervised/data/test', transform=transform_super)
 # %% Dataloaders
 train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE)
 test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE)
