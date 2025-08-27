@@ -13,7 +13,7 @@ import seaborn as sns
 # %% Hyperparameters
 BATCH_SIZE = 10
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-NUM_EPOCHS = 50
+NUM_EPOCHS = 80
 LOSS_FACTOR_SELFSUPERVISED = 1
 # %% image transformation steps
 transform_super = transforms.Compose(
@@ -39,11 +39,11 @@ class UnlabeledDataset(Dataset):
     def __getitem__(self,idx):
         img = Image.open(self.images_full_path_names[idx])
         # get a random sesemi transformation
-        transformation_class_label = random.randint(0,len(self.sesemi_transformations))
+        transformation_class_label = random.randint(0,len(self.sesemi_transformations)-1)
         #apply the randomly selected transformation
         angle = self.sesemi_transformations[transformation_class_label]
         data = transform_super(img)
-        data = transforms.function.rotate(img=data,angle=angle)
+        data = transforms.functional.rotate(img=data,angle=angle)
         return data, transformation_class_label
 
 #%% TODO: Dataset for unlabeled data
@@ -138,7 +138,6 @@ for epoch in range(NUM_EPOCHS):
     train_losses_self.append(train_loss)
     print(f"Epoch {epoch}: Loss {train_loss}")
 # %%
-
 sns.lineplot(x=list(range(len(train_losses_self))), y=train_losses_self)
 # %%
 y_test_preds = []
