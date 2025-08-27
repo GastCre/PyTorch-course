@@ -98,7 +98,7 @@ class SesemiNet(nn.Module):
         x_selfsupervised = self.backbone(x_selfsupervised)
         x_selfsupervised = self.fc_out_selfsuper(x_selfsupervised)
         x_selfsupervised = self.output_layer_selfsuper(x_selfsupervised)
-        
+        return x_supervised, x_selfsupervised
 
     
 model = SesemiNet(n_super_classes=2, n_selfsuper_classes=4)
@@ -114,20 +114,19 @@ train_losses_self = []
 for epoch in range(NUM_EPOCHS):
     train_loss = 0
     # TODO: get data
-   
+    data_loaders=zip(train_loader, unlabeled_loader)
     for i, (supervised_data, selfsupervised_data) in enumerate(data_loaders):
         X_super, y_super = supervised_data
         X_selfsuper, y_selfsuper = selfsupervised_data
-        
         # init gradients
         optimizer.zero_grad()
         
-        # forward pass
+        # TODO: forward pass
         y_super_pred, y_selfsuper_pred = model(X_super, X_selfsuper)
-              
         # TODO: calc losses
-    
-        
+        loss_super = criterion_supervised(y_super_pred,y_super)
+        loss_selfsuper = criterion_selfsupervised(y_selfsuper_pred,y_selfsuper)
+        loss=loss_super+loss_selfsuper * LOSS_FACTOR_SELFSUPERVISED #Here we add this parameter (from the paper)
         # calculate gradients
         loss.backward()
         
