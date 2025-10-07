@@ -7,13 +7,14 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 import os
 import random
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix
 from PIL import Image
 import seaborn as sns
+import pandas as pd
 # %% Hyperparameters
 BATCH_SIZE = 10
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-NUM_EPOCHS = 80
+NUM_EPOCHS = 100
 LOSS_FACTOR_SELFSUPERVISED = 1
 # %% image transformation steps
 transform_super = transforms.Compose(
@@ -120,13 +121,15 @@ for epoch in range(NUM_EPOCHS):
         X_selfsuper, y_selfsuper = selfsupervised_data
         # init gradients
         optimizer.zero_grad()
-        
+
         # TODO: forward pass
         y_super_pred, y_selfsuper_pred = model(X_super, X_selfsuper)
+        
         # TODO: calc losses
         loss_super = criterion_supervised(y_super_pred,y_super)
         loss_selfsuper = criterion_selfsupervised(y_selfsuper_pred,y_selfsuper)
         loss=loss_super+loss_selfsuper * LOSS_FACTOR_SELFSUPERVISED #Here we add this parameter (from the paper)
+        
         # calculate gradients
         loss.backward()
         
@@ -150,4 +153,10 @@ with torch.no_grad():
          y_test_trues.extend(y_test.numpy())
 # %%
 accuracy_score(y_pred=y_test_preds, y_true=y_test_trues)
+# %%
+cm = confusion_matrix(y_test_trues, y_test_preds)
+# plt.figure(figsize = (10,7))
+sns.heatmap(cm, annot=True, annot_kws={"size": 8}, fmt="")
+#plt.savefig("/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/300_Transformers/conf_matrix_1.jpg")
+
 # %%

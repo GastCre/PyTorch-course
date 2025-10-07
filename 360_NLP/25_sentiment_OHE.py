@@ -13,7 +13,7 @@ from torch.utils.data import Dataset, DataLoader
 import seaborn as sns
 import matplotlib.pyplot as plt
 #%% data import 
-twitter_file = 'data/Tweets.csv'
+twitter_file = '/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/360_NLP/data/Tweets.csv'
 df = pd.read_csv(twitter_file).dropna()
 df
 
