@@ -43,3 +43,5 @@ def get_word_analogy(word1, word2, word3, max_n=5):
 get_word_analogy(word1='sister', word2='brother', word3='nephew')
     
     
+
+# %%
