@@ -69,3 +69,63 @@ class SentimentData(Dataset):
 
     def __getitem__(self, index):
         return self.X[index], self.y[index]
+
+
+train_ds = SentimentData(X=X_train, y=y_train)
+test_ds = SentimentData(X=X_test, y=y_test)
+
+# %% Dataloader
+train_loader = DataLoader(
+    dataset=train_ds, batch_size=BATCH_SIZE, shuffle=True)
+
+test_loader = DataLoader(
+    dataset=test_ds, batch_size=15000)
+
+# %% Model
+
+
+class SentimentModel(nn.Module):
+    def __init__(self, NUM_FEATURES, NUM_CLASSES, HIDDEN=10):
+        super().__init__()
+        self.linear = nn.Linear(NUM_FEATURES, HIDDEN)
+        self.linear2 = nn.Linear(HIDDEN, NUM_CLASSES)
+        self.relu = nn.ReLU()
+        self.log_softmax = nn.LogSoftmax(dim=1)
+
+    def forward(self, x):
+        x = self.linear(x)
+        x = self.relu(x)
+        x = self.linear2(x)
+        x = self.log_softmax(x)
+        return x
+
+
+# %% Model, Loss and Optimizer
+model = SentimentModel(NUM_FEATURES=X_train.shape[1], NUM_CLASSES=3)
+
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.AdamW(model.parameters())
+# %% Model training
+train_losses = []
+for epoch in range(NUM_EPOCHS):
+    curr_loss = 0
+    for X_batch, y_batch in train_loader:
+        optimizer.zero_grad()
+        y_pred_log = model(X_batch)
+        loss = criterion(y_pred_log, y_batch.long())
+        curr_loss += loss.item()
+        loss.backward()
+        optimizer.step()
+    train_losses.append(curr_loss)
+    print(f"Epoch {epoch}. Loss {curr_loss}")
+
+# %% Losses plot
+sns.lineplot(x=list(range(len(train_losses))), y=train_losses)
+
+# %% Model evaluation
+with torch.no_grad():
+    for X_batch, y_batch in test_loader:
+        y_test_pred_log = model(X_batch)
+        y_test_pred = torch.argmax(y_test_pred_log, dim=1)
+
+y_test_np = y_test_pred.squeeze().cpu().numpy()
