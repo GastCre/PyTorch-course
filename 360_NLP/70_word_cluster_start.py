@@ -55,8 +55,17 @@ n_cols = glove_dim
 X = torch.empty((n_rows, n_cols))
 
 for i in range(n_rows):
-    current_word = df_word_cloud.iloc[i, 'word']
+    current_word = df_word_cloud.loc[i, 'word']
     X[i, :] = get_embedding_vector(current_word)
     print(f"{i}: {current_word}")
 
+# %%
+tsne = TSNE(n_components=2)
+X_tsne = tsne.fit_transform(X.cpu().numpy())
+# %%
+df_word_cloud['x'] = X_tsne[:, 0]
+df_word_cloud['y'] = X_tsne[:, 1]
+
+ggplot(data=df_word_cloud.sample(25)) + aes(x='x', y='y', label='word',
+                                            color='category') + geom_text() + labs(title='GloVe Word Embeddings and Categories')
 # %%
