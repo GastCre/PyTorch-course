@@ -4,6 +4,7 @@ import pandas as pd
 import pickle
 from collections import Counter
 import seaborn as sns
+import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -27,7 +28,7 @@ df['class'] = df['sentiment'].map(cat_id)
 
 # %% Hyperparameters
 BATCH_SIZE = 128
-NUM_EPOCHS = 80
+NUM_EPOCHS = 280
 MAX_FEATURES = 10
 
 # %% Embedding Model
@@ -121,11 +122,21 @@ for epoch in range(NUM_EPOCHS):
 
 # %% Losses plot
 sns.lineplot(x=list(range(len(train_losses))), y=train_losses)
-
+plt.show()
 # %% Model evaluation
 with torch.no_grad():
     for X_batch, y_batch in test_loader:
         y_test_pred_log = model(X_batch)
         y_test_pred = torch.argmax(y_test_pred_log, dim=1)
 
-y_test_np = y_test_pred.squeeze().cpu().numpy()
+y_test_pred_np = y_test_pred.squeeze().cpu().numpy()
+
+acc = accuracy_score(y_pred=y_test_pred_np, y_true=y_test)
+print(f"The accuracy of the model is {np.round(acc, 3)*100} %.")
+
+# %% Naive classifier
+most_common_count = Counter(y_test).most_common()[0][1]
+print(
+    f"Naive classifier: {np.round(most_common_count / len(y_test)*100, 1)} %.")
+
+# %%
