@@ -1,8 +1,12 @@
-#%% packages
+# %% packages
 from transformers import pipeline
 import pandas as pd
 
-#%% data prep
+# %% Classifier
+task = 'zero-shot-classification'
+model = 'facebook/bart-large-mnli'
+classifier = pipeline(task=task, model=model)
+# %% data prep
 # first example: Raymond Chandler "The Big Sleep" (crime novel)
 # second example: J.R.R. Tolkien "The Lord of the Rings" (fantasy novel)
 # third example: Bill Bryson "A Short History of Nearly Everything"
@@ -11,7 +15,12 @@ documents = ["It was about eleven o’clock in the morning, mid October, with th
              "Welcome. And congratulations. I am delighted that you could make it. Getting here wasn’t easy, I know. In fact, I suspect it was a little tougher than you realize. To begin with, for you to be here now trillions of drifting atoms had somehow to assemble in an intricate and curiously obliging manner to create you. It’s an arrangement so specialized and particular that it has never been tried before and will only exist this once."
              ]
 # %% candidate labels
+candidate_labels = ['crime', 'fantasy', 'history']
 # %% model inference
+res = classifier(documents, candidate_labels=candidate_labels)
 # %% visualise result
+pd.DataFrame(res[1]).plot.bar(x='labels', y='scores',
+                              rot=0, title='The Lord of the Rings')
 # %% flag multiple labels
- 
+classifier(documents, candidate_labels=candidate_labels, multi_label=True)
+# %%
