@@ -27,9 +27,9 @@ plt.figure()
 plt.scatter(x, y)
 plt.axis('off')
 plt.grid(None)
-plt.savefig("/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/train_im/Heart_fig.jpg")
+plt.savefig("./220_GAN/train_im/Heart_fig.jpg")
 im = Image.open(
-    "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/train_im/Heart_fig.jpg")
+    "./220_GAN/train_im/Heart_fig.jpg")
 # %% Data augmentation and tranformation to tensor
 im_transform = transforms.Compose([
     transforms.Resize((128, 128)),
@@ -39,7 +39,7 @@ im_transform = transforms.Compose([
 ])
 im_gan = im_transform(im)
 # %% prepare tensors and dataloader
-train_dir = "/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/train_im"
+train_dir = "./220_GAN/train_im"
 train_dataset = ImageFolder(train_dir, transform=im_transform)
 
 #  dataloader
@@ -162,6 +162,6 @@ for epoch in range(NUM_EPOCHS):
             plt.axis('off')
             plt.title(f"Epoch {epoch}")
             plt.savefig(
-                f"/Users/gastoncrecikeinbaum/Documents/Data Science/Courses/PyTorch/PyTorch-course/220_GAN/saved_images_ex/saved_fig_GAN_CNN_{epoch}_{NUM_EPOCHS}.png")
+                f"./220_GAN/saved_images_ex/saved_fig_GAN_CNN_{epoch}_{NUM_EPOCHS}.png")
             plt.close()
 # %%
